@@ -20,19 +20,19 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update() {
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        
         animator.SetBool("isGrounded",IsGroundeed());
-        if (!isFacingRight && horizontal >0f) Flip();
-        else if (isFacingRight && horizontal <0f) Flip();
-
+    
     }
     public void Jump(InputAction.CallbackContext context){
         if (context.performed && IsGroundeed()){
+            Debug.Log("Jump started");
             rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
             animator.SetTrigger("Jump");
         }
         else if(context.canceled && rb.velocity.y >0f){
+            Debug.Log("Jump canceled");
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-            animator.SetTrigger("Jump");
         }
     }
 
@@ -49,8 +49,7 @@ public class PlayerMovement : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         horizontal = context.ReadValue<Vector2>().x;
-
         animator.SetBool("isRunning", Mathf.Abs(horizontal)>0);
-
+        if (!isFacingRight && horizontal >0f || isFacingRight && horizontal <0f) Flip();
     }
 }
